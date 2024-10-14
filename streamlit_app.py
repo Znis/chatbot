@@ -23,10 +23,10 @@ def get_chat_response(user_input):
                 if line:
                     data = line.decode('utf-8')
                     data = json.loads(data)
-                    if data["message"]["content"]:
+                    if data["message"]["content"] and not data['done']:
                         yield data["message"]["content"]
                     else:
-                        yield data
+                        return
         else:
             yield {"error": f"Error: {response.status_code} - {response.text}"}    
     if response.status_code == 200:
