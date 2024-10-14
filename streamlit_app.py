@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import json
 
 # Function to call the API
 def get_chat_response(user_input):
@@ -16,8 +17,14 @@ def get_chat_response(user_input):
         "stream": True
             }       
     
-    response = requests.post(api_url, json=payload, headers=headers)
-    
+    with requests.post(api_url, json=payload, headers=headers, stream=True) as response:
+        if response.status_code == 200:
+            for line in response.iter_lines():
+                if line:
+                    data = line.decode('utf-8')
+                    yield json.loads(data)
+        else:
+            yield {"error": f"Error: {response.status_code} - {response.text}"}    
     if response.status_code == 200:
         return response.json().get('response', 'No response from API')
     else:
