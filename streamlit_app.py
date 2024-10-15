@@ -7,7 +7,8 @@ def get_chat_response(user_input):
     api_url = st.secrets['API_ENDPOINT']
     headers = {
         "ngrok-skip-browser-warning": "1",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": st.secrets['TOKEN']
     }
     payload = {
         "model": st.secrets['MODEL'],
